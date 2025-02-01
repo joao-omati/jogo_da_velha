@@ -1,9 +1,5 @@
-import random
-
-def print_board(board):
-    for row in board:
-        print(" | ".join(row))
-        print("-" * 9)
+import tkinter as tk
+from tkinter import messagebox
 
 def check_winner(board, player):
     for row in board:
@@ -59,40 +55,43 @@ def best_move(board):
             move = (r, c)
     return move
 
-def main():
-    board = [[" " for _ in range(3)] for _ in range(3)]
-    print("Bem-vindo ao Jogo da Velha!")
-    print_board(board)
-    
-    while True:
-        # Jogador "X"
-        move = None
-        while move not in available_moves(board):
-            try:
-                move = tuple(map(int, input("Digite sua jogada (linha e coluna, ex: 1 2): ").split()))
-            except ValueError:
-                pass
-        board[move[0]][move[1]] = "X"
-        print_board(board)
+def on_click(r, c):
+    if board[r][c] == " " and not check_winner(board, "X") and not check_winner(board, "O"):
+        board[r][c] = "X"
+        buttons[r][c].config(text="X")
         if check_winner(board, "X"):
-            print("Você venceu!")
-            break
+            messagebox.showinfo("Jogo da Velha", "Você venceu!")
+            return
         if not available_moves(board):
-            print("Empate!")
-            break
+            messagebox.showinfo("Jogo da Velha", "Empate!")
+            return
         
-        # IA "O"
-        print("Vez da IA...")
         move = best_move(board)
         if move:
             board[move[0]][move[1]] = "O"
-        print_board(board)
+            buttons[move[0]][move[1]].config(text="O")
+        
         if check_winner(board, "O"):
-            print("A IA venceu!")
-            break
-        if not available_moves(board):
-            print("Empate!")
-            break
+            messagebox.showinfo("Jogo da Velha", "A IA venceu!")
+        elif not available_moves(board):
+            messagebox.showinfo("Jogo da Velha", "Empate!")
 
-if __name__ == "__main__":
-    main()
+def reset_game():
+    global board
+    board = [[" " for _ in range(3)] for _ in range(3)]
+    for r in range(3):
+        for c in range(3):
+            buttons[r][c].config(text=" ")
+
+root = tk.Tk()
+root.title("Jogo da Velha")
+board = [[" " for _ in range(3)] for _ in range(3)]
+buttons = [[None for _ in range(3)] for _ in range(3)]
+
+for r in range(3):
+    for c in range(3):
+        buttons[r][c] = tk.Button(root, text=" ", font=("Arial", 24), width=5, height=2, command=lambda r=r, c=c: on_click(r, c))
+        buttons[r][c].grid(row=r, column=c)
+
+tk.Button(root, text="Reiniciar", font=("Arial", 14), command=reset_game).grid(row=3, column=0, columnspan=3)
+root.mainloop()
