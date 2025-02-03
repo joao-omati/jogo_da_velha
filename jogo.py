@@ -69,10 +69,12 @@ def ao_clicar(r, c):
         
         if verificar_vencedor(tabuleiro, "X"):
             messagebox.showinfo("Jogo da Velha", "Você venceu!")
+            janela.destroy()  # Fecha a janela
             return
         
         if not movimentos_disponiveis(tabuleiro):
             messagebox.showinfo("Jogo da Velha", "Empate!")
+            janela.destroy()  # Fecha a janela
             return
         
         movimento = melhor_movimento(tabuleiro)
@@ -82,8 +84,10 @@ def ao_clicar(r, c):
         
         if verificar_vencedor(tabuleiro, "O"):
             messagebox.showinfo("Jogo da Velha", "A IA venceu!")
+            janela.destroy()  # Fecha a janela
         elif not movimentos_disponiveis(tabuleiro):
             messagebox.showinfo("Jogo da Velha", "Empate!")
+            janela.destroy()  # Fecha a janela
 
 def reiniciar_jogo():
     global tabuleiro
@@ -99,7 +103,7 @@ janela.configure(bg=tema_fundo)
 janela.resizable(False, False)
 
 # Centralizar a janela
-largura_janela = 300
+largura_janela = 400
 altura_janela = 350
 largura_tela = janela.winfo_screenwidth()
 altura_tela = janela.winfo_screenheight()
